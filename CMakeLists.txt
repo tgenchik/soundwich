@@ -6,6 +6,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-O0")
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SNDFILE REQUIRED sndfile)
+
 include_directories(
         src
         include
@@ -27,3 +30,6 @@ add_executable(soundwich
         ${SRC_FILES}
         ${HEADER_FILES}
 )
+
+target_include_directories(soundwich PRIVATE ${SNDFILE_INCLUDE_DIRS})
+target_link_libraries(soundwich ${SNDFILE_LIBRARIES})
