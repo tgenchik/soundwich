@@ -21,6 +21,7 @@ set(HEADER_FILES
 
 set(SRC_FILES
         src/main.cpp
+        src/playlist_manager.cpp
 )
 
 add_executable(soundwich
