@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "-O0")
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SNDFILE REQUIRED sndfile)
+pkg_check_modules(PIPEWIRE REQUIRED libpipewire-0.3)
 
 include_directories(
         src
@@ -15,17 +16,23 @@ include_directories(
 )
 
 set(HEADER_FILES
+        include/audio_output/audio_output.hpp
+        include/audio_output/IAudioOutput.hpp
+
         include/decoder/DecoderFactory.hpp
         include/decoder/IDecoder.hpp
         include/decoder/SndfileDecoder.hpp
 
-        include/audio_output.hpp
         include/player_controller.hpp
         include/playlist_manager.hpp
         include/common.hpp
 )
 
 set(SRC_FILES
+        src/audio_output/PipeWireCore.cpp
+        src/audio_output/PipeWireOutput.cpp
+        src/audio_output/process.cpp
+
         src/decoder/DecoderFactory.cpp
         src/decoder/SndfileDecoder.cpp
 
@@ -38,5 +45,15 @@ add_executable(soundwich
         ${HEADER_FILES}
 )
 
-target_include_directories(soundwich PRIVATE ${SNDFILE_INCLUDE_DIRS})
-target_link_libraries(soundwich ${SNDFILE_LIBRARIES})
+target_include_directories(soundwich
+        PRIVATE
+        ${PIPEWIRE_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIRS}
+)
+
+target_link_libraries(soundwich
+        PRIVATE
+        m
+        ${PIPEWIRE_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
+)

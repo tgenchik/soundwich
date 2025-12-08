@@ -1,5 +1,5 @@
-#include "audio_output.hpp"
-#include "decoder_manager.hpp"
+#include "audio_output/audio_output.hpp"
+#include "decoder/DecoderFactory.hpp"
 #include "player_controller.hpp"
 #include "playlist_manager.hpp"
 #include <iostream>
@@ -9,8 +9,8 @@ using namespace soundwich;
 int main()
 {
     PlaylistManager playlist("playlist.json");
-    DecoderManager decoders;
-    PipeWireOutput audio;
+    DecoderFactory decoders;
+    PipeWireCore audio;
     PlayerController player(playlist, decoders, audio);
 
     std::string cmd;

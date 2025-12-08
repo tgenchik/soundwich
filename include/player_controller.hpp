@@ -1,6 +1,6 @@
 #pragma once
-#include "audio_output.hpp"
-#include "decoder_manager.hpp"
+#include "audio_output/audio_output.hpp"
+#include "decoder/DecoderFactory.hpp"
 #include "playlist_manager.hpp"
 
 
@@ -10,7 +10,7 @@ namespace soundwich
 class PlayerController
 {
 public:
-    PlayerController(PlaylistManager &pm, DecoderManager &dm, IAudioOutput &out);
+    PlayerController(PlaylistManager &pm, DecoderFactory &dm, PipeWireCore &out);
 
     void play();
     void pause();
@@ -20,8 +20,8 @@ public:
 
 private:
     PlaylistManager &playlist;
-    DecoderManager &decoderManager;
-    IAudioOutput &audio;
+    DecoderFactory &decoderManager;
+    PipeWireCore &audio;
 
     std::unique_ptr<IDecoder> decoder;
     bool isPaused = false;
