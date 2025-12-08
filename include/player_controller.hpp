@@ -2,30 +2,40 @@
 #include "audio_output/audio_output.hpp"
 #include "decoder/DecoderFactory.hpp"
 #include "playlist_manager.hpp"
+#include "common.hpp"
+#include <thread>
+#include <ostream>
 
+namespace soundwich {
+    class PlayerController {
+    public:
+        PlayerController(PlaylistManager &pm, DecoderFactory &df, PipeWireCore &out, std::ostream& outs, std::ostream& err);
 
-namespace soundwich
-{
+        void play();
 
-class PlayerController
-{
-public:
-    PlayerController(PlaylistManager &pm, DecoderFactory &dm, PipeWireCore &out);
+        void pause();
 
-    void play();
-    void pause();
-    void resume();
-    void nextTrack();
-    void prevTrack();
+        void resume();
 
-private:
-    PlaylistManager &playlist;
-    DecoderFactory &decoderManager;
-    PipeWireCore &audio;
+        void nextTrack();
 
-    std::unique_ptr<IDecoder> decoder;
-    bool isPaused = false;
-    bool isPlaying = false;
-};
+        void prevTrack();
 
+        void printTrackInfo();
+
+    private:
+        PlaylistManager &playlist;
+        DecoderFactory &decoderFactory;
+        PipeWireCore &audio;
+
+        std::ostream& out;
+        std::ostream& err;
+
+        PipeWireOutput *audioOutput = nullptr;
+        std::unique_ptr<IDecoder> decoder;
+
+        std::thread playbackThread;
+        bool isPaused = false;
+        bool isPlaying = false;
+    };
 } // namespace soundwich

@@ -8,10 +8,10 @@ using namespace soundwich;
 
 int main()
 {
-    PlaylistManager playlist("playlist.json");
+    PlaylistManager playlist("playlist.txt");
     DecoderFactory decoders;
     PipeWireCore audio;
-    PlayerController player(playlist, decoders, audio);
+    PlayerController player(playlist, decoders, audio, std::cout, std::cout);
 
     std::string cmd;
 
@@ -23,6 +23,7 @@ int main()
     std::cout << "  resume\n";
     std::cout << "  next\n";
     std::cout << "  prev\n";
+    std::cout << "  info\n";
     std::cout << "  exit\n";
 
     while (true)
@@ -58,6 +59,10 @@ int main()
         {
             playlist.prevTrack();
             player.play();
+        }
+        else if (cmd == "info")
+        {
+            player.printTrackInfo();
         }
         else if (cmd == "exit")
         {

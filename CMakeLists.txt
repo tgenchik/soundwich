@@ -38,6 +38,7 @@ set(SRC_FILES
 
         src/main.cpp
         src/playlist_manager.cpp
+        src/player_controller.cpp
 )
 
 add_executable(soundwich
