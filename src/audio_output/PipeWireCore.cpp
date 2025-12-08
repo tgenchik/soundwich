@@ -58,11 +58,8 @@ PipeWireOutput &PipeWireCore::createPipeWireOutput()
         throw "aboba";
 
     PipeWireOutput* res = new PipeWireOutput();
-    res->state = created;
     res->core = this;
-    res->timer = 0;
-    res->volume = 1;
-    res->it = &items[ind];
+    res->ind = ind;
 
     items[ind] = res;
     return *items[ind];

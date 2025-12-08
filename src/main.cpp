@@ -49,6 +49,7 @@ void makeSound(PipeWireCore& core, float freq) // играет звук с ну�
 {
     PipeWireOutput* a = &core.createPipeWireOutput(); // новый поток проигрывания
     a->setVolume(0.1); // громкость
+    a->dieOnEnd(); // само удаляется в конце исполнения
 
     double t = 0;
     std::vector<float> test(100000); // массив для звука
@@ -61,6 +62,8 @@ void makeSound(PipeWireCore& core, float freq) // играет звук с ну�
 
     a->writeSamples(test);
     a->start();
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
+    // delete a;
     // сам поток остаётся, в него можно ещё писать
     // в нём есть деструктор, но конкретно тут утечка памяти
 }

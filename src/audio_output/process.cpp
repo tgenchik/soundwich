@@ -11,7 +11,6 @@ void soundwich::process(void* core_ptr)
     int i, c, n_frames, stride;
     float* dst;
 
-
     if ((b = pw_stream_dequeue_buffer(core->stream)) == NULL)
     {
         pw_log_warn("out of buffers: %m");
@@ -30,10 +29,15 @@ void soundwich::process(void* core_ptr)
     memset(dst, 0, n_frames * sizeof(float) * core->channels);
 
     float* prev_dst;
-    for (PipeWireOutput* it : core->items)
+    PipeWireOutput* it;
+    for (int O = 0; O < core->items.size(); O++)
     {
+        std::lock_guard<std::mutex> lock(core->muts[O]);
+        it = core->items[O];
+
         if (it == nullptr) continue;
-        if (it->state != playing) continue;
+        if (it->state != playing)
+            continue;
 
         prev_dst = dst;
         for (i = 0; i < n_frames; i++)
@@ -42,7 +46,13 @@ void soundwich::process(void* core_ptr)
             for (int j = 0; j < core->channels; j++)
                 *dst++ += it->getNext() * it->volume;
         }
+
         dst = prev_dst;
+        if (it->dieOnEnd_flag && it->data.empty())
+        {
+            core->muts[i].unlock();
+            delete it;
+        }
     }
 
     buf->datas[0].chunk->offset = 0;

@@ -9,7 +9,8 @@ enum audioState
 {
     created,
     paused,
-    playing
+    playing,
+    dead
 };
 
 class IAudioOutput

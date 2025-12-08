@@ -9,6 +9,7 @@
 #include <spa/param/audio/format-utils.h>
 #include <algorithm>
 #include <vector>
+#include <mutex>
 
 
 namespace soundwich
@@ -31,12 +32,14 @@ public:
     float getNext(); //TODO: can make better
     void setVolume(float newVol);
 
+    void dieOnEnd();
+
     ~PipeWireOutput();
 
 private:
     PipeWireOutput();
 
-    PipeWireOutput** it;
+    int ind;
     PipeWireCore* core;
 
     audioState state;
@@ -44,11 +47,14 @@ private:
     std::deque<float> data;
     double timer;
     float volume;
+
+    bool dieOnEnd_flag;
 };
 
 class PipeWireCore
 {
     friend void process(void* core_ptr);
+    friend class PipeWireOutput;
 
 public:
     PipeWireCore();
@@ -61,6 +67,7 @@ private:
     pw_stream_events stream_events;
     std::array<uint8_t, 1024> pod_buffer;
     std::array<PipeWireOutput*, 4096> items;
+    std::array<std::mutex, 4096> muts;
     uint32_t rate;
     uint32_t channels;
 };
