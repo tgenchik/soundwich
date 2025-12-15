@@ -1,4 +1,6 @@
 #include "audio_output/audio_output.hpp"
+#include "pipewire/stream.h"
+#include "pipewire/thread-loop.h"
 #include <iostream>
 #include <math.h>
 #include <pipewire/pipewire.h>
@@ -69,4 +71,32 @@ PipeWireCore::~PipeWireCore()
 {
     pw_thread_loop_stop(loop);
     pw_stream_destroy(stream);
+}
+
+void PipeWireCore::changeSettings(uint32_t newRate, uint32_t newChannels) {
+    pw_thread_loop_lock(loop);
+
+    bool was_active = false;
+    if (pw_stream_get_state(stream, nullptr) == PW_STREAM_STATE_STREAMING) {
+        pw_stream_set_active(stream, false);
+        was_active = true;
+    }
+
+    rate = newRate;
+    channels = newChannels;
+    spa_audio_info_raw tmp = SPA_AUDIO_INFO_RAW_INIT(.format = SPA_AUDIO_FORMAT_F32,
+                                                     .rate = rate,
+                                                     .channels = channels);
+    const struct spa_pod *params[1];
+    struct spa_pod_builder b = SPA_POD_BUILDER_INIT((void *)pod_buffer.data(), sizeof(pod_buffer));
+    
+    params[0] = spa_format_audio_raw_build(&b, SPA_PARAM_EnumFormat, &tmp);
+
+    pw_stream_update_params(stream, params, 1);
+
+    if (was_active) {
+        pw_stream_set_active(stream, true);
+    }
+
+    pw_thread_loop_unlock(loop);
 }

@@ -9,10 +9,10 @@ using namespace soundwich;
 int main()
 {
     const std::filesystem::path playlist_path("playlist.json");
-    PlaylistManager playlist(playlist_path);
+    PlaylistManager playlist_mgr(playlist_path);
     DecoderFactory decoders;
     PipeWireCore audio;
-    PlayerController player(playlist, decoders, audio, std::cout, std::cout);
+    PlayerController player(playlist_mgr, decoders, audio, std::cout, std::cout);
 
     std::string cmd;
 
@@ -40,20 +40,20 @@ int main()
         if (cmd.rfind("create ", 0) == 0)
         {
             std::string name = cmd.substr(7);
-            playlist.createPlaylist(name);
+            playlist_mgr.createPlaylist(name);
             std::cout << "Create playlist: " << name << "\n";
         }
         else if (cmd.rfind("select ", 0) == 0)
         {
             std::string name = cmd.substr(7);
-            playlist.selectPlaylist(name);
-            std::cout << "Current playlist: " << playlist.getCurrentPlaylistName() << "\n";
+            playlist_mgr.selectPlaylist(name);
+            std::cout << "Current playlist: " << playlist_mgr.getCurrentPlaylistName() << "\n";
         }
         else if (cmd.rfind("add ", 0) == 0)
         {
             std::string spath = cmd.substr(4);
             std::filesystem::path path(spath);
-            playlist.addTrack(path);
+            playlist_mgr.addTrack(path);
             std::cout << "Added: " << path << "\n";
         }
         else if (cmd == "playlists")
@@ -101,6 +101,8 @@ int main()
             std::cout << "Unknown command\n";
         }
     }
+
+    playlist_mgr.dumpJsonConfig(playlist_path);
 
     return 0;
 }

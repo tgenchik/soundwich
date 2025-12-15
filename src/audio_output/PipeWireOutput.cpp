@@ -25,6 +25,10 @@ void PipeWireOutput::stop()
     data.clear();
 }
 
+void PipeWireOutput::changeSettings(uint32_t newRate, uint32_t newChannels) {
+    core->changeSettings(newRate, newChannels);
+}
+
 float PipeWireOutput::getNext()
 {
     if (data.empty())

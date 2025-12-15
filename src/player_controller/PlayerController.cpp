@@ -24,7 +24,7 @@ PlayerController::PlayerController(PlaylistManager &pm, DecoderFactory &df, Pipe
 
     playbackThread = std::thread([this]()
                                  {
-            while (!end)
+            while (!end.load(std::memory_order_acquire))
             {
                 if (audioOutput->getState() != waiting)
                 {
@@ -46,8 +46,11 @@ PlayerController::PlayerController(PlaylistManager &pm, DecoderFactory &df, Pipe
 
 PlayerController::~PlayerController()
 {
-    end = true;
-    playbackThread.join();
+    end.store(true, std::memory_order_release);
+
+    if (playbackThread.joinable()) {
+        playbackThread.join();
+    }
 }
 
 
@@ -77,6 +80,14 @@ void PlayerController::play()
     catch (const std::exception &e)
     {
         err << "Decoder error: " << e.what() << "\n";
+        return;
+    }
+
+    try {
+        auto &meta = decoder->getMetadata();
+        audioOutput->changeSettings(meta.samplingRateHz, meta.channels);
+    } catch (...) {
+        err << "Failed to set sampling rate\n";
         return;
     }
 
@@ -138,7 +149,7 @@ void PlayerController::resume()
         out << "Track already play\n";
         return;
     }
-    if (audioOutput->getState() != waiting)
+    if (audioOutput->getState() != paused)
     {
         out << "No current track\n";
         return;
@@ -148,7 +159,6 @@ void PlayerController::resume()
         audioOutput->resume();
         out << "Resumed\n";
     }
-    out << "No current track\n";
 }
 
 void PlayerController::nextTrack()
@@ -156,6 +166,7 @@ void PlayerController::nextTrack()
     try
     {
         playlist.getNextTrack();
+        audioOutput->stop();
         play();
     }
     catch (...)
@@ -169,6 +180,7 @@ void PlayerController::prevTrack()
     try
     {
         playlist.getPrevTrack();
+        audioOutput->stop();
         play();
     }
     catch (...)

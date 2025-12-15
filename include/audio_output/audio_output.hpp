@@ -27,6 +27,7 @@ public:
     void pause() override;
     void resume() override;
     void stop() override;
+    void changeSettings(uint32_t newRate, uint32_t newChannels);
     IAudioOutput& writeSamples(std::vector<float> sample) override;
     audioState getState() override;
     float getNext(); //TODO: can make better
@@ -60,6 +61,8 @@ public:
     PipeWireCore();
     PipeWireOutput& createPipeWireOutput();
     ~PipeWireCore();
+
+    void changeSettings(uint32_t newRate, uint32_t newChannels);
 
 private:
     pw_thread_loop* loop;

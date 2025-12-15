@@ -33,7 +33,7 @@ void PlaylistManager::loadJsonConfig(std::string_view str)
 {
     auto obj = nlohmann::json::parse(str);
 
-    m_current_playlist = obj["rock"];
+    m_current_playlist = obj["current_playlist"];
 
     for (auto &playlist : obj["playlists"])
     {
@@ -75,7 +75,7 @@ void PlaylistManager::dumpJsonConfig(std::string &str) const
 
     str = nlohmann::json({{"playlists", playlists},
                           {"current_playlist", m_current_playlist}})
-              .dump();
+              .dump(2);
 }
 
 void PlaylistManager::dumpJsonConfig(std::ostream &out) const

@@ -45,6 +45,6 @@ namespace soundwich {
         std::thread playbackThread;
         bool isPaused = false;
         bool isPlaying = false;
-        bool end = false;
+        std::atomic<bool> end = false;
     };
 } // namespace soundwich

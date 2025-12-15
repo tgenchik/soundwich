@@ -24,7 +24,7 @@ set(HEADER_FILES
         include/decoder/IDecoder.hpp
         include/decoder/SndfileDecoder.hpp
 
-        include/playlist_manager/PlaylistManager.cpp
+        include/playlist_manager/PlaylistManager.hpp
 
         include/player_controller/PlayerController.hpp
         include/common.hpp
