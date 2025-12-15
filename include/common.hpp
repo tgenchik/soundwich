@@ -1,4 +1,6 @@
 #pragma once
+#include <filesystem>
+#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -11,12 +13,6 @@ struct SoundwichError : public std::runtime_error
     explicit SoundwichError(const std::string &msg) : std::runtime_error(msg) {}
 };
 
-
-struct Track
-{
-    std::string path;
-    std::string title;
-    int durationSeconds = 0;
-};
+using TrackPath = std::optional<std::filesystem::path>;
 
 } // namespace soundwich
