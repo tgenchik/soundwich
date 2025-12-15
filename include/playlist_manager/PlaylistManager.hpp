@@ -39,6 +39,8 @@ public:
     // Creates a new playlist `name`, doesn't select it.
     void createPlaylist(std::string_view name);
 
+    std::vector<std::string> getPlaylistNames() const;
+
     // Add a track to the end of the current playlist.
     void addTrack(const std::filesystem::path &path);
 

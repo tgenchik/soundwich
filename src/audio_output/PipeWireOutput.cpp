@@ -21,7 +21,7 @@ void PipeWireOutput::resume()
 
 void PipeWireOutput::stop()
 {
-    state = waiting;
+    state = created;
     data.clear();
 }
 

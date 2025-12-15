@@ -26,7 +26,7 @@ set(HEADER_FILES
 
         include/playlist_manager/PlaylistManager.cpp
 
-        include/player_controller.hpp
+        include/player_controller/PlayerController.hpp
         include/common.hpp
 )
 
@@ -41,7 +41,7 @@ set(SRC_FILES
         src/playlist_manager/PlaylistManager.cpp
 
         src/main.cpp
-        src/player_controller.cpp
+        src/player_controller/PlayerController.cpp
 )
 
 add_executable(soundwich

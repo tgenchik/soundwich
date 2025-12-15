@@ -133,6 +133,16 @@ void PlaylistManager::createPlaylist(std::string_view name)
     m_playlists.insert({std::string(name), {}});
 }
 
+std::vector<std::string> PlaylistManager::getPlaylistNames() const
+{
+    std::vector<std::string> names;
+    for (const auto& pair : m_playlists)
+    {
+        names.push_back(pair.first);
+    }
+    return names;
+}
+
 void PlaylistManager::addTrack(const std::filesystem::path &path)
 {
     m_playlists.at(m_current_playlist).tracks.push_back(path);
