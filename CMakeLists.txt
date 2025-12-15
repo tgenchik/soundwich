@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "-O0")
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SNDFILE REQUIRED sndfile)
 pkg_check_modules(PIPEWIRE REQUIRED libpipewire-0.3)
+find_package(nlohmann_json 3.12.0 REQUIRED)
 
 include_directories(
         src
@@ -57,4 +58,5 @@ target_link_libraries(soundwich
         m
         ${PIPEWIRE_LIBRARIES}
         ${SNDFILE_LIBRARIES}
+        nlohmann_json::nlohmann_json
 )
