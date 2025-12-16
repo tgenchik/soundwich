@@ -27,26 +27,40 @@ After launching the program, the following commands are available:
 ```
 === Soundwich Console Player ===
 Commands:
-  add <path>
+  create <playlist name>
+  select <playlist name>
+  add <track path>
+  playlists
+  tracks
+  info
   play
   pause
   resume
+  stop
   next
   prev
-  info
   exit
 ```
+
 
 ### 📄 Command Descriptions
 
 | Command     | 	Description                        |
 |-------------|-------------------------------------|
+| create \<playlist name> | 	Create a new playlist                 |
+| select \<playlist name> | 	Select an existing playlist           |
 | add \<path> | 	Add an audio file to the playlist  |
+| playlists                | 	List all available playlists          |
+| tracks                   | 	List tracks in the current playlist   |
+| info        | 	Show metadata of the current track |
 | play        | Start playing the current track     |
 | pause       | 	Pause playback                     |
 | resume      | 	Resume playback                    |
+| stop                     | 	Stop playback                         |
 | next        | 	Skip to the next track             |
 | prev        | 	Go back to the previous track      |
-| info        | 	Show metadata of the current track |
 | exit        | 	Exit the application               |
+
+  
+
 
